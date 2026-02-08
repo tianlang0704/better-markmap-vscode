@@ -1,10 +1,10 @@
 {
   "name": "better-markmap-vscode",
-  "version": "0.2.11",
+  "version": "100.2.11",
   "description": "Visualize your markdown in VSCode",
   "author": "tianlang0704 <tianlang0704@gmail.com>",
   "license": "MIT",
-  "displayName": "Markmap",
+  "displayName": "Better Markmap",
   "publisher": "tianlang0704",
   "icon": "assets/favicon.png",
   "engines": {

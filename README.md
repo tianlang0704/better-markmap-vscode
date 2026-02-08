@@ -1,9 +1,6 @@
 # better-markmap-vscode
 
-[![vscode](https://img.shields.io/visual-studio-marketplace/v/gera2ld.better-markmap-vscode)](https://marketplace.visualstudio.com/items?itemName=gera2ld.better-markmap-vscode)
-[![open vsx](https://img.shields.io/open-vsx/v/tianlang0704/better-markmap-vscode)](https://open-vsx.org/extension/tianlang0704/better-markmap-vscode)
-
-This extension integrates [markmap](https://markmap.js.org/) into VSCode.
+This extension integrates [markmap](https://markmap.js.org/) into VSCode a little bit better.
 
 ## Features
 

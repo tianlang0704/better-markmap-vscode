@@ -75,21 +75,34 @@ window.addEventListener('message', (e) => {
   const handler = handlers[type];
   handler?.(data);
 });
-document.addEventListener('click', (e) => {
-  const el = (e.target as HTMLElement)?.closest('a');
-  if (el) {
-    const href = el.getAttribute('href');
-    if (href.startsWith('#')) {
-      const node = findHeading(href.slice(1));
-      highlightNode(node);
-    } else if (!href.includes('://')) {
-      vscode.postMessage({
-        type: 'openFile',
-        data: href,
-      });
+document.addEventListener(
+  'click',
+  (e) => {
+    const el = (e.target as HTMLElement)?.closest('a');
+    if (el) {
+      const href = el.getAttribute('href');
+      if (!href) return;
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        const node = findHeading(href.slice(1));
+        highlightNode(node);
+      } else if (!href.includes('://')) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        // Force target to _self to prevent some environments from opening new window
+        if (el.target === '_blank') el.target = '_self';
+        vscode.postMessage({
+          type: 'openFile',
+          data: href,
+        });
+      }
     }
-  }
-});
+  },
+  true,
+);
 vscode.postMessage({ type: 'refresh' });
 
 const toolbar = new Toolbar();
@@ -140,6 +153,19 @@ function initialize(mm: Markmap) {
         },
         true,
       );
+    mm.g.selectAll('a').on(
+      'click.prevent',
+      (e: Event) => {
+        const el = e.currentTarget as HTMLAnchorElement;
+        const href = el.getAttribute('href');
+        if (href && !href.includes('://')) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+      },
+      true,
+    );
   });
 }
 
