@@ -32,7 +32,7 @@ import {
   transformerExport,
 } from './util';
 
-const PREFIX = 'markmap-vscode';
+const PREFIX = 'better-markmap-vscode';
 const VIEW_TYPE = `${PREFIX}.markmap`;
 
 function renderToolbar() {
