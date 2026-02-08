@@ -296,8 +296,15 @@ class MarkmapEditor implements CustomTextEditorProvider {
         updateTheme();
       },
       editAsText: () => {
+        const viewColumn = vscodeWindow.tabGroups.all
+          .flatMap((group) => group.tabs)
+          .find(
+            (tab) =>
+              tab.input instanceof TabInputText &&
+              tab.input.uri.toString() === document.uri.toString(),
+          )?.group.viewColumn;
         vscodeWindow.showTextDocument(document, {
-          viewColumn: ViewColumn.Beside,
+          viewColumn: viewColumn ?? ViewColumn.One,
         });
       },
       async export() {
@@ -333,7 +340,7 @@ class MarkmapEditor implements CustomTextEditorProvider {
             'vscode.openWith',
             filePath,
             VIEW_TYPE,
-            ViewColumn.Beside,
+            webviewPanel.viewColumn,
           );
         } else {
           commands.executeCommand('vscode.open', filePath);
@@ -397,6 +404,12 @@ class MarkmapEditor implements CustomTextEditorProvider {
       data: recursive,
     });
   }
+
+  getAnyViewColumn(): ViewColumn | undefined {
+    for (const panel of this.webviewPanelMap.values()) {
+      if (panel.viewColumn) return panel.viewColumn;
+    }
+  }
 }
 
 export function activate(context: ExtensionContext) {
@@ -404,12 +417,8 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(
     commands.registerCommand(`${PREFIX}.open`, (uri?: Uri) => {
       uri ??= vscodeWindow.activeTextEditor?.document.uri;
-      commands.executeCommand(
-        'vscode.openWith',
-        uri,
-        VIEW_TYPE,
-        ViewColumn.Beside,
-      );
+      const viewColumn = markmapEditor.getAnyViewColumn() ?? ViewColumn.Beside;
+      commands.executeCommand('vscode.openWith', uri, VIEW_TYPE, viewColumn);
     }),
     commands.registerCommand(`${PREFIX}.toggle`, () => {
       const document = vscodeWindow.activeTextEditor?.document;
