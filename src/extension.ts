@@ -327,7 +327,17 @@ class MarkmapEditor implements CustomTextEditorProvider {
           Utils.dirname(document.uri),
           decodeURIComponent(relPath),
         );
-        commands.executeCommand('vscode.open', filePath);
+        const ext = filePath.path.split('.').pop()?.toLowerCase();
+        if (ext === 'md' || ext === 'mdx') {
+          commands.executeCommand(
+            'vscode.openWith',
+            filePath,
+            VIEW_TYPE,
+            ViewColumn.Beside,
+          );
+        } else {
+          commands.executeCommand('vscode.open', filePath);
+        }
       },
       async setFocus(line: number) {
         const viewColumn = vscodeWindow.tabGroups.all
