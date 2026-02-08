@@ -79,7 +79,12 @@ class MarkmapEditor implements CustomTextEditorProvider {
       ...builtInPlugins,
       localImage((relPath) =>
         webviewPanel.webview
-          .asWebviewUri(Utils.joinPath(Utils.dirname(document.uri), relPath))
+          .asWebviewUri(
+            Utils.joinPath(
+              Utils.dirname(document.uri),
+              decodeURIComponent(relPath),
+            ),
+          )
           .toString(),
       ),
     ]);
@@ -318,7 +323,10 @@ class MarkmapEditor implements CustomTextEditorProvider {
         await writeFile(targetUri, data.content);
       },
       openFile(relPath: string) {
-        const filePath = Utils.joinPath(Utils.dirname(document.uri), relPath);
+        const filePath = Utils.joinPath(
+          Utils.dirname(document.uri),
+          decodeURIComponent(relPath),
+        );
         commands.executeCommand('vscode.open', filePath);
       },
       async setFocus(line: number) {
